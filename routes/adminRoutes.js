@@ -1,11 +1,7 @@
 import { Router } from "express";
 import isAuthenticate from "../middlewares/auth.js";
-import {
-  addBook,
-  deleteBook,
-  updateBook,
-  imgUpload,
-} from "../controller/bookController.js";
+import {createPost,getPostbyId,updatePost,deletePost
+} from "../controller/postController.js";
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
@@ -31,8 +27,8 @@ const parser = multer({ storage: storage });
 
 const adminRouter = Router();
 
-adminRouter.post("/addbook", isAuthenticate, addBook);
-adminRouter.delete("/deletebook", isAuthenticate, deleteBook);
-adminRouter.put("/updatebook/:id", isAuthenticate, updateBook);
-// adminRouter.post('/upload',parser.single('image'),imgUpload)
+adminRouter.post("/createpost", isAuthenticate, createPost);
+adminRouter.get('/post/:id',isAuthenticate,getPostbyId);
+adminRouter.put("/updatepost/:id", isAuthenticate, updatePost);
+adminRouter.delete("/deletepost/:id", isAuthenticate, deletePost);
 export default adminRouter;

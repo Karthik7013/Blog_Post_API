@@ -1,28 +1,31 @@
-import book from "../model/bookModel.js";
+import post from "../model/postModel.js";
 import user from "../model/userModel.js";
-
 
 // @desc     add book
 // @route    /admin/addbook
 // @access   admin
-const addBook = async (req, res) => {
+const createPost = async (req, res) => {
   try {
     let { id } = req.user;
-    let { title, author, rating, year, price, category,imgURL } = req.body;
+    let { title, subtitle, imgUrl, authorName, description, category } =
+      req.body;
+
     let userFound = await user.findOne({ _id: id });
-    if (userFound.isAdmin) {
-      await book.create({
+    if (userFound) {
+      let newPost = await post.create({
         title,
-        author,
-        rating,
-        year,
-        price,
+        subtitle,
+        authorId: id,
+        authorName,
+        imgUrl,
+        description,
         category,
-        imgURL
       });
-      res.status(201).json({ message: "Book added successfully" });
+      res
+        .status(201)
+        .json({ message: "Post added successfully", post: newPost });
     } else {
-      res.send({ error: { message: "Dont have access to add book" } });
+      res.send({ error: { message: "Dont have access to add Post" } });
     }
   } catch (error) {
     res.status(500).json({ error: { message: error?.errorResponse?.errmsg } });
@@ -32,28 +35,40 @@ const addBook = async (req, res) => {
 // @desc     update book
 // @route    /admin/updatebook/:id
 // @access   admin
-const updateBook = async (req, res) => {
+const updatePost = async (req, res) => {
   res.send("updatebook");
 };
 
 // @desc     delete book
 // @route    /admin/deletebook/:id
 // @access   admin
-const deleteBook = async (req, res) => {
-  res.send("deletebook");
+const deletePost = async (req, res) => {
+  const postId = req.params?.id;
+  post
+    .findOneAndDelete({ _id: postId })
+    .then((docs) => {
+      if (!docs) {
+        res.status(404).json({ message: "Post Not Found!" });
+      } else {
+        res.status(200).json({ message: "Post Deleted", post: docs });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json({ message: "An error occurred", error: err });
+    });
 };
 
 // @desc     get bookbyId
 // @route    /book/:id
 // @access   admin/user
-const getBookbyId = async (req, res) => {
+const getPostbyId = async (req, res) => {
   try {
-    let bookId = req.params.id;
-    const bookFound = await book.findOne({ _id: bookId });
-    if (bookFound) {
-      res.status(200).json(bookFound);
+    let postId = req.params.id;
+    const postFound = await post.findOne({ _id: postId });
+    if (!postFound) {
+      res.status(404).json({ message: "no post found" });
     } else {
-      res.status(404).json({ message: "no book found" });
+      res.status(200).json({ post: postFound });
     }
   } catch (error) {
     res.status(500).json({ message: "internal error" });
@@ -63,7 +78,7 @@ const getBookbyId = async (req, res) => {
 // @desc     save book
 // @route    /save/:id
 // @access   user
-const saveBook = async (req, res) => {
+const savePost = async (req, res) => {
   try {
     let userId = req.user.id;
     let bookId = req.params.id;
@@ -93,7 +108,7 @@ const saveBook = async (req, res) => {
 // @route    /admin/uploadbook
 // @access   admin
 const imgUpload = async (req, res) => {
-  return res.status(200).json({url:req.file.path})
+  return res.status(200).json({ url: req.file.path });
 };
 
-export { deleteBook, addBook, updateBook, getBookbyId, saveBook, imgUpload };
+export { imgUpload, createPost, deletePost, getPostbyId, savePost, updatePost };
