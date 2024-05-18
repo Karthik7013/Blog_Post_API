@@ -9,7 +9,7 @@ import {
 import { saveBook } from "../controller/bookController.js";
 import isAuthenticate from "../middlewares/auth.js";
 
-const userRouter = Router();
+const userRouter = Router()
 userRouter.post("/register", userRegister);
 userRouter.post("/login", userLogin);
 userRouter.post("/rest/password",isAuthenticate, updatePassword);
