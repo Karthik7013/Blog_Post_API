@@ -1,8 +1,8 @@
 import post from "../model/postModel.js";
 import user from "../model/userModel.js";
 
-// @desc     add book
-// @route    /admin/addbook
+// @desc     add post
+// @route    /admin/addpost
 // @access   admin
 const createPost = async (req, res) => {
   try {
@@ -32,15 +32,15 @@ const createPost = async (req, res) => {
   }
 };
 
-// @desc     update book
+// @desc     update post
 // @route    /admin/updatebook/:id
 // @access   admin
 const updatePost = async (req, res) => {
   res.send("updatebook");
 };
 
-// @desc     delete book
-// @route    /admin/deletebook/:id
+// @desc     delete post
+// @route    /admin/deletepost/:id
 // @access   admin
 const deletePost = async (req, res) => {
   const postId = req.params?.id;
@@ -58,7 +58,7 @@ const deletePost = async (req, res) => {
     });
 };
 
-// @desc     get bookbyId
+// @desc     get postbyId
 // @route    /book/:id
 // @access   admin/user
 const getPostbyId = async (req, res) => {
@@ -75,7 +75,19 @@ const getPostbyId = async (req, res) => {
   }
 };
 
-// @desc     save book
+// @desc     get all posts
+// @route    /book/:id
+// @access   admin/user
+const getAllPosts = async (req, res) => {
+  try {
+    let allPosts = await post.find({});
+    res.status(200).json(allPosts);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Error" });
+  }
+};
+
+// @desc     save post
 // @route    /save/:id
 // @access   user
 const savePost = async (req, res) => {
@@ -111,4 +123,12 @@ const imgUpload = async (req, res) => {
   return res.status(200).json({ url: req.file.path });
 };
 
-export { imgUpload, createPost, deletePost, getPostbyId, savePost, updatePost };
+export {
+  imgUpload,
+  createPost,
+  deletePost,
+  getPostbyId,
+  savePost,
+  updatePost,
+  getAllPosts,
+};

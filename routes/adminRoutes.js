@@ -1,6 +1,6 @@
 import { Router } from "express";
 import isAuthenticate from "../middlewares/auth.js";
-import {createPost,getPostbyId,updatePost,deletePost
+import {createPost,getPostbyId,updatePost,deletePost,getAllPosts
 } from "../controller/postController.js";
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
@@ -28,6 +28,7 @@ const parser = multer({ storage: storage });
 const adminRouter = Router();
 
 adminRouter.post("/createpost", isAuthenticate, createPost);
+adminRouter.get('/post/all',getAllPosts)
 adminRouter.get('/post/:id',isAuthenticate,getPostbyId);
 adminRouter.put("/updatepost/:id", isAuthenticate, updatePost);
 adminRouter.delete("/deletepost/:id", isAuthenticate, deletePost);
