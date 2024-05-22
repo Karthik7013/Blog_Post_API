@@ -87,6 +87,18 @@ const getAllPosts = async (req, res) => {
   }
 };
 
+// @desc     get all posts
+// @route    /book/:id
+// @access   admin/user
+const getAllPostsById = async (req, res) => {
+  let userId = req.params.id;
+  try {
+    let allPosts = await post.find({ authorId: userId });
+    res.status(200).json(allPosts);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Error" });
+  }
+};
 // @desc     save post
 // @route    /save/:id
 // @access   user
@@ -124,6 +136,7 @@ const imgUpload = async (req, res) => {
 };
 
 export {
+  getAllPostsById,
   imgUpload,
   createPost,
   deletePost,
