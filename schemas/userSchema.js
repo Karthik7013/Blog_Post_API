@@ -17,6 +17,15 @@ const userSchema = mongoose.Schema(
       imgURL: {
         type: String,
       },
+      about: {
+        type: String,
+      },
+      connect: [
+        {
+          media: String,
+          link: String,
+        },
+      ],
     },
     email: {
       type: String,

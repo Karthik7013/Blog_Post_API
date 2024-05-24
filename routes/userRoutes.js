@@ -21,4 +21,6 @@ userRouter.put("/profile/update/:id", isAuthenticate, (req, res) => {
   res.send({ message: "updated profile" });
 });
 
+
+
 export default userRouter;

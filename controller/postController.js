@@ -94,7 +94,7 @@ const getAllPostsById = async (req, res) => {
   let userId = req.params.id;
   try {
     let allPosts = await post.find({ authorId: userId });
-    res.status(200).json(allPosts);
+    return res.status(200).json(allPosts);
   } catch (error) {
     res.status(500).json({ message: "Internal Error" });
   }
