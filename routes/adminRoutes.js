@@ -47,13 +47,23 @@ adminRouter.get("/dashboard/:id", isAuthenticate, async (req, res) => {
   let userId = req.params.id;
   try {
     let allPosts = await post.find({ authorId: userId });
-    let p = {}
+    let p = {};
     allPosts.map((e) => {
-        e.category.map((e) => {
-            p[e] = p[e] ? p[e] + 1 : 1
-        })
+      e.category.map((e) => {
+        p[e] = p[e] ? p[e] + 1 : 1;
+      });
     });
-    return res.status(200).json(p);
+    let dashboardChartData = {
+      categoryWisePosts: {
+        ...p,
+      },
+      totalPosts: allPosts.length,
+      totalLikes: 50,
+      profile: {
+        status: 50,
+      },
+    };
+    return res.status(200).json(dashboardChartData);
   } catch (error) {
     res.status(500).json({ message: "Internal Error" });
   }
