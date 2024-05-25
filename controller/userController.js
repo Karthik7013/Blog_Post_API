@@ -60,10 +60,10 @@ const userLogin = async (req, res) => {
         }
       });
     } else {
-      res.status(404).json({message:'invalid login'})
+      res.status(404).json({ message: "invalid login" });
     }
   } catch (error) {
-    res.status(500).json({message:"internal error"})
+    res.status(500).json({ message: "internal error" });
   }
 };
 
@@ -84,22 +84,50 @@ const userProfile = async (req, res) => {
 // @access  private
 const updatePassword = async (req, res) => {
   try {
-    console.log(req.user);
     let id = req.user.id;
     let userExists = await user.findOne({ _id: id });
-    console.log(userExists);
     if (userExists) {
+      let { oldPassword, newPassword } = req.body;
+      bcrypt.compare(
+        oldPassword,
+        userExists.password,
+        async function (err, result) {
+          if (result) {
+            // encrypt new password
+            bcrypt.genSalt(saltRounds, function (err, salt) {
+              if (err) {
+                res.status(400).json({ message: "Failed to create salt" });
+              }
+              bcrypt.hash(newPassword, salt, async function (err, hash) {
+                if (err) {
+                  res
+                    .status(400)
+                    .json({ message: "Failed to encrypt password !" });
+                } else {
+                  // update new encrypted password
+                  user
+                    .findOneAndUpdate(
+                      { _id: id },
+                      { $set: { password: hash } },
+                      { new: true }
+                    )
+                    .then((updatedDoc) => {
+                      res
+                        .status(200)
+                        .json({ message: "update success", user: updatedDoc });
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                }
+              });
+            });
+          } else {
+            res.status(400).json({ message: "wrong password" });
+          }
+        }
+      );
     }
-    let { oldPassword, newPassword } = req.body;
-    console.log(req.body);
-
-    bcrypt.compare(oldPassword, userExists.password, function (err, result) {
-      if (result) {
-        console.log(oldPassword, result);
-      } else {
-        res.status(400).json({ message: "wrong password" });
-      }
-    });
   } catch (error) {}
   // res.send({ message: "updatepassword" });
 };
