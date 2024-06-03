@@ -6,6 +6,10 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    dark: {
+      type: Boolean,
+      default: false
+    },
     name: {
       type: String,
       required: true,
