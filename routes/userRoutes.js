@@ -23,9 +23,9 @@ userRouter.put("/profile/update/:id", isAuthenticate, (req, res) => {
 });
 
 
-userRouter.put('/profile/dark/:id', isAuthenticate, async (req, res) => {
+userRouter.put('/profile/dark/', isAuthenticate, async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = req.user.id;
     const found_user = await user.findById(id);
     if (!found_user) {
       res.status(400).json({ message: 'user not found' })
