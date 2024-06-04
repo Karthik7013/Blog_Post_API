@@ -85,12 +85,8 @@ const getAllPosts = async (req, res) => {
     let category = req.query.category;
 
     if (limit && page) {
-      // let range = 0 - 9
-      const cursor = post.find().skip(0).limit(9);
-
-      const documents = await cursor.toArray();
-      // let allPosts = await post.find({});
-      res.status(200).json(documents);
+      const posts = await post.find().skip(limit*(page-1)).limit(limit);
+      res.status(200).json(posts);
     } else {
       let allPosts = await post.find({});
       res.status(200).json(allPosts);
