@@ -36,6 +36,7 @@ const adminRouter = Router();
 
 adminRouter.post("/createpost", isAuthenticate, createPost);
 adminRouter.get("/post/all", getAllPosts);
+
 adminRouter.get("/post/:id", isAuthenticate, getPostbyId);
 adminRouter.get("/post/all/:id", isAuthenticate, getAllPostsById);
 adminRouter.put("/updatepost/:id", isAuthenticate, updatePost);

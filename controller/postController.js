@@ -80,8 +80,21 @@ const getPostbyId = async (req, res) => {
 // @access   admin/user
 const getAllPosts = async (req, res) => {
   try {
-    let allPosts = await post.find({});
-    res.status(200).json(allPosts);
+    let limit = parseInt(req.query.limit);
+    let page = parseInt(req.query.page);
+    let category = req.query.category;
+
+    if (limit && page) {
+      // let range = 0 - 9
+      const cursor = post.find().skip(0).limit(9);
+
+      const documents = await cursor.toArray();
+      // let allPosts = await post.find({});
+      res.status(200).json(documents);
+    } else {
+      let allPosts = await post.find({});
+      res.status(200).json(allPosts);
+    }
   } catch (error) {
     res.status(500).json({ message: "Internal Error" });
   }
