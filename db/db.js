@@ -1,17 +1,9 @@
-import mongoose from 'mongoose'
-const db = ()=>{
-    mongoose
-    .connect(
-      "mongodb+srv://admin1234:admin1234@cluster0.gbzago5.mongodb.net/bookstore?retryWrites=true&w=majority&appName=Cluster0"
-    )
-    .then(() => {
-      console.log("data connected success");
-      app.listen(8000, () => {
-        console.log("server running on port 8000");
-      });
-    })
-    .catch(() => {
-      console.log("failed");
-    });
-}
+import mongoose from "mongoose";
+import { configDotenv } from "dotenv";
+configDotenv();
+const MONGO_URI = process.env.MONGO_URI;
+const db = async () => {
+  let res = await mongoose.connect(MONGO_URI)
+  return res;
+};
 export default db;
