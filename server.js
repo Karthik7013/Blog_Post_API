@@ -11,6 +11,7 @@ db()
       console.log(`server running on port ${PORT}`)
     })
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err)
     console.log("failed")
   });
