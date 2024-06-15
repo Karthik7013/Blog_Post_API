@@ -85,7 +85,10 @@ const getAllPosts = async (req, res) => {
     let category = req.query.category;
 
     if (limit && page) {
-      const posts = await post.find().skip(limit*(page-1)).limit(limit);
+      const posts = await post
+        .find()
+        .skip(limit * (page - 1))
+        .limit(limit);
       res.status(200).json(posts);
     } else {
       let allPosts = await post.find({});
@@ -113,26 +116,34 @@ const getAllPostsById = async (req, res) => {
 // @access   user
 const savePost = async (req, res) => {
   try {
-    let userId = req.user.id;
-    let bookId = req.params.id;
-    let foundBook = await book.findOne({ _id: bookId });
-    let foundUser = await user.findOne({ _id: userId });
-    if (foundUser) {
-      let bookExist = false;
-      foundUser.saved.map((e) => {
-        if (e._id.toString() === bookId) {
-          bookExist = true;
+    const userId = req.user.id;
+    const postBody = req.body;
+    const postId = "66681a2fd355b97fc0dee5a4";
+
+    const postFound = await post.findOne({ _id: postId });
+    const userFound = await user.findOne({ _id: userId });
+    // userFound.saved.push(postFound);
+    // userFound.save();
+
+    if (userFound && postFound) {
+      let postExist = false;
+      userFound.saved.map((e) => {
+        if (e._id.toString() === postFound._id.toString()) {
+          postExist = true;
         }
       });
-      if (bookExist) {
-        res.status(400).json({ message: "book already saved" });
+      if (postExist) {
+        res.status(400).json({ message: "post already saved" });
       } else {
-        foundUser.saved.push(foundBook);
-        res.status(200).json({ message: "added sucessfully !" });
-        await foundUser.save();
+        userFound.saved.push(postFound);
+        res.status(200).json({ message: "saved sucessfully !" });
+        await userFound.save();
       }
+    } else {
+      res.status(404).json({ messag: "user not found !" });
     }
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: "internal error" });
   }
 };

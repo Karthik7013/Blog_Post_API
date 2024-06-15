@@ -17,7 +17,7 @@ userRouter.post("/rest/password", isAuthenticate, updatePassword);
 userRouter.post("/forgot/password", forgotPassword);
 
 userRouter.get("/profile", isAuthenticate, userProfile);
-userRouter.post("/save/:id", isAuthenticate, savePost);
+userRouter.post("/save", isAuthenticate, savePost);
 userRouter.put("/profile/update/:id", isAuthenticate, (req, res) => {
   res.send({ message: "updated profile" });
 });
