@@ -8,10 +8,9 @@ db()
   .then(() => {
     console.log("db connected success");
     app.listen(PORT, () => {
-      console.log(`server running on port ${PORT}`)
-    })
+      console.log(`server running on port ${PORT}`);
+    });
   })
   .catch((err) => {
-    console.log(err)
-    console.log("failed")
+    console.log("failed");
   });
