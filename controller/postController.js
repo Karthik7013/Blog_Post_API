@@ -115,11 +115,10 @@ const getAllPostsById = async (req, res) => {
 // @route    /save/:id
 // @access   user
 const savePost = async (req, res) => {
+
   try {
     const userId = req.user.id;
-    const postBody = req.body;
-    const postId = "66681a2fd355b97fc0dee5a4";
-
+    const postId = req.params.id;
     const postFound = await post.findOne({ _id: postId });
     const userFound = await user.findOne({ _id: userId });
     // userFound.saved.push(postFound);
@@ -133,7 +132,7 @@ const savePost = async (req, res) => {
         }
       });
       if (postExist) {
-        res.status(400).json({ message: "post already saved" });
+        res.status(200).json({ message: "post already saved" });
       } else {
         userFound.saved.push(postFound);
         res.status(200).json({ message: "saved sucessfully !" });
@@ -143,8 +142,27 @@ const savePost = async (req, res) => {
       res.status(404).json({ messag: "user not found !" });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: "internal error" });
+  }
+};
+
+// @desc     save post
+// @route    /all/savedpost
+// @access   user
+const getSavedPosts = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    console.log(userId);
+    const userFound = await user.findOne({ _id: userId });
+    if (!userFound) {
+      res.status(404).json({ message: "unauthorized access" });
+    } else {
+      const userSavedPosts = userFound.saved
+      res.status(200).json( userSavedPosts);
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal Error" });
   }
 };
 
@@ -164,4 +182,5 @@ export {
   savePost,
   updatePost,
   getAllPosts,
+  getSavedPosts
 };

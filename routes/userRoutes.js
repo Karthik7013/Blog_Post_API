@@ -5,8 +5,9 @@ import {
   userLogin,
   userRegister,
   userProfile,
+
 } from "../controller/userController.js";
-import { savePost } from "../controller/postController.js";
+import { savePost,  getSavedPosts } from "../controller/postController.js";
 import isAuthenticate from "../middlewares/auth.js";
 import user from "../model/userModel.js";
 
@@ -17,7 +18,9 @@ userRouter.post("/rest/password", isAuthenticate, updatePassword);
 userRouter.post("/forgot/password", forgotPassword);
 
 userRouter.get("/profile", isAuthenticate, userProfile);
-userRouter.post("/save", isAuthenticate, savePost);
+userRouter.post("/save/:id", isAuthenticate, savePost);
+userRouter.get('/all/savedpost',isAuthenticate,getSavedPosts)
+
 userRouter.put("/profile/update/:id", isAuthenticate, (req, res) => {
   res.send({ message: "updated profile" });
 });
