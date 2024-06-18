@@ -28,6 +28,18 @@ const postSchema = mongoose.Schema(
       type: [],
       required: true,
     },
+    comments: [
+      {
+        commenter: {
+          id:String,
+          avatarUrl:String,
+          name: String,
+          email: String,
+        },
+        comment: String,
+        date: Date,
+      }
+    ],
   },
   { timestamps: true }
 );
