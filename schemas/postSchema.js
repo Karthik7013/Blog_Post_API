@@ -37,7 +37,7 @@ const postSchema = mongoose.Schema(
           email: String,
         },
         comment: String,
-        date: Date,
+        date: Date
       }
     ],
   },

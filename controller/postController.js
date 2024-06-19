@@ -115,14 +115,11 @@ const getAllPostsById = async (req, res) => {
 // @route    /save/:id
 // @access   user
 const savePost = async (req, res) => {
-
   try {
     const userId = req.user.id;
     const postId = req.params.id;
     const postFound = await post.findOne({ _id: postId });
     const userFound = await user.findOne({ _id: userId });
-    // userFound.saved.push(postFound);
-    // userFound.save();
 
     if (userFound && postFound) {
       let postExist = false;

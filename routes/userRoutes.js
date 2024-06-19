@@ -5,11 +5,11 @@ import {
   userLogin,
   userRegister,
   userProfile,
-
 } from "../controller/userController.js";
-import { savePost,  getSavedPosts } from "../controller/postController.js";
+import { savePost, getSavedPosts } from "../controller/postController.js";
 import isAuthenticate from "../middlewares/auth.js";
 import user from "../model/userModel.js";
+import post from "../model/postModel.js";
 
 const userRouter = Router();
 userRouter.post("/register", userRegister);
@@ -19,7 +19,17 @@ userRouter.post("/forgot/password", forgotPassword);
 
 userRouter.get("/profile", isAuthenticate, userProfile);
 userRouter.post("/save/:id", isAuthenticate, savePost);
-userRouter.get('/all/savedpost',isAuthenticate,getSavedPosts)
+userRouter.get("/all/savedpost", isAuthenticate, getSavedPosts);
+
+userRouter.post("/comment/:id", isAuthenticate, async (req, res) => {
+  const postId = req.params.id;
+  const commentBody = req.body;
+
+  const foundPost = await post.findOne({ _id: postId });
+  foundPost.comments.push(commentBody);
+  await foundPost.save()
+  res.send(foundPost);
+});
 
 userRouter.put("/profile/update/:id", isAuthenticate, (req, res) => {
   res.send({ message: "updated profile" });
