@@ -7,8 +7,12 @@ const app = express()
 app.use(express.json())
 app.use(cors())
 app.use(logger)
-
+app.use((req, res, next) => {
+  res.setHeader('X-Frame-Options', 'DENY');
+  next();
+});
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/admin',adminRouter)
+
 
 export default app;
