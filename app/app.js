@@ -11,6 +11,13 @@ app.use((req, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
   next();
 });
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "frame-ancestors 'none'" // or "frame-ancestors 'self'"
+  );
+  next();
+});
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/admin',adminRouter)
 
