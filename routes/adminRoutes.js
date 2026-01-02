@@ -23,16 +23,35 @@ cloudinary.config({
 // Configure multer storage for Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: "uploads",
-    format: async (req, file) => "png", // file format
-    public_id: (req, file) => "sample-image", // file name
+  params: async (req, file) => {
+    const sanitizedFileName = file.originalname
+      .replace(/\.[^/.]+$/, "")
+      .replace(/[^a-zA-Z0-9_-]/g, "_");
+    return {
+      folder: "uploads",
+      public_id: `${sanitizedFileName}_${Date.now()}`,
+      resource_type: "auto", // ← allows ANY file type
+    };
   },
 });
 
 const parser = multer({ storage: storage });
 
 const adminRouter = Router();
+
+
+adminRouter.post("/upload", parser.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file provided" });
+  }
+
+  return res.status(200).json({
+    fileName: req.file.originalname,
+    fileType: req.file.mimetype,
+    fileSize: req.file.size,
+    fileUrl: req.file.path
+  });
+});
 
 adminRouter.post("/createpost", isAuthenticate, createPost);
 adminRouter.get("/post/all", getAllPosts);
